@@ -1,7 +1,6 @@
 package demo
 
 import block.Pi
-
 import io.opencensus.common.Scope;
 import io.opencensus.trace.Span;
 import io.opencensus.exporter.trace.jaeger.JaegerTraceExporter;
@@ -13,14 +12,6 @@ import io.opencensus.trace.SpanContext;
 import io.opencensus.trace.propagation.TextFormat;
 import io.opencensus.trace.propagation.SpanContextParseException
 import io.vertx.core.AbstractVerticle
-import io.vertx.core.buffer.Buffer
-import io.vertx.core.http.HttpServerRequest;
-//import io.vertx.core.eventbus.Message
-
-
-/*vertx.createHttpServer().requestHandler({ req ->
-    req.response().putHeader("content-type", "text/html").end("<html><body><h1>Hello from vert.x!</h1></body></html>")
-}).listen(8080)*/
 
 class MyGroovyVerticle extends AbstractVerticle {
   private static final Tracer tracer = Tracing.getTracer();
@@ -48,7 +39,6 @@ class MyGroovyVerticle extends AbstractVerticle {
     def consumer = eb.consumer("somebody.do.job")
     consumer.handler({ message ->
       println("I have received a message: ${message.body().toString()}")
-      //println("I have received a message: ${message.headers().toString() }")
       SpanContext spanContext = textFormat.extract(message.body(), GETTER);
       Span span = tracer.spanBuilderWithRemoteParent("message recieved", spanContext).
           setRecordEvents(true).setSampler(Samplers.alwaysSample()).startSpan();
@@ -56,8 +46,6 @@ class MyGroovyVerticle extends AbstractVerticle {
       Scope scope = tracer.withSpan(span)
       scope.withCloseable {
        tracer.getCurrentSpan().addAnnotation("Start work");
-
-        // if you need a delay here
         try {
           Thread.sleep(new Random().nextInt(1000)+1);
         }
@@ -72,14 +60,12 @@ class MyGroovyVerticle extends AbstractVerticle {
         span2.end()
         tracer.getCurrentSpan().addAnnotation("End of proccess");
       span.end();
-
       //Independent process
       Span span3 = tracer.spanBuilderWithRemoteParent("more one diffucult", span.context).setRecordEvents(true).setSampler(Samplers.alwaysSample()).startSpan();
       Scope scope3 = tracer.withSpan(span3)
       scope3.withCloseable {
         def pi2 = new Pi().calculate(50000)
         tracer.getCurrentSpan().addAnnotation(pi2 as String);
-        //tracer.getCurrentSpan().addAnnotation("End of ALL");
       span3.end()
 
       mmm = ['value1': pi1, 'value2': pi2]
@@ -94,13 +80,10 @@ class MyGroovyVerticle extends AbstractVerticle {
   }
 
   public void first() {
-    //logger.info("Starting the First HTTP server");
       Scope ignored = tracer.spanBuilder("root").setRecordEvents(true).setSampler(Samplers.alwaysSample()).startScopedSpan()
       ignored.withCloseable {
         println "RUNING"
         // Do nothing
-        //HttpRequest<Buffer> b = WebClient.create(vertx).get(secondPort, "localhost", "/");
-        //textFormat.inject( tracer.getCurrentSpan().getContext(), b, SETTER);
       }
 
   }

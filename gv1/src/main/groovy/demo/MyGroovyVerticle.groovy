@@ -13,12 +13,6 @@ import io.opencensus.trace.propagation.SpanContextParseException
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpServerRequest;
-//import io.vertx.core.eventbus.Message
-
-
-/*vertx.createHttpServer().requestHandler({ req ->
-    req.response().putHeader("content-type", "text/html").end("<html><body><h1>Hello from vert.x!</h1></body></html>")
-}).listen(8080)*/
 
 class MyGroovyVerticle extends AbstractVerticle {
   private static final Tracer tracer = Tracing.getTracer();
@@ -41,24 +35,18 @@ class MyGroovyVerticle extends AbstractVerticle {
     JaegerTraceExporter.createAndRegister("http://127.0.0.1:14268/api/traces", "m1");
     LoggingTraceExporter.register();
     first()
-
     def mmm
-
     vertx.setPeriodic(5000, { id ->
       // This handler will get called every second
       Scope ignored = tracer.spanBuilder("start INIT process").setRecordEvents(true).setSampler(Samplers.alwaysSample()).startScopedSpan()
       ignored.withCloseable {
         tracer.getCurrentSpan().addAnnotation("start job");
-        //HttpRequest<Buffer> b = WebClient.create(vertx).get(secondPort, "localhost", "/");
-        //textFormat.inject( tracer.getCurrentSpan().getContext(), b, SETTER);
         mmm = ['a': 'b', 'c': 'd']
         textFormat.inject( tracer.getCurrentSpan().getContext(), mmm, SETTER);
         eb.publish("somebody.do.job", mmm)
         tracer.getCurrentSpan().addAnnotation("sended  message to BUS");
       }
-
     })
-
 
     def consumer = eb.consumer("somebody.deliver.result")
     consumer.handler({ message ->
@@ -73,27 +61,15 @@ class MyGroovyVerticle extends AbstractVerticle {
         tracer.getCurrentSpan().addAnnotation("End of Proccess. Result Delivered to the customer" + message.body().toString());
       }
       span.end();
-
-
     })
-
-
-
-
   }
 
-
   public void first() {
-    //logger.info("Starting the First HTTP server");
-
       Scope ignored = tracer.spanBuilder("root").setRecordEvents(true).setSampler(Samplers.alwaysSample()).startScopedSpan()
       ignored.withCloseable {
         tracer.getCurrentSpan().addAnnotation("start");
         tracer.getCurrentSpan().addAnnotation("sended");
         println "RUNING"
-        //HttpRequest<Buffer> b = WebClient.create(vertx).get(secondPort, "localhost", "/");
-        //textFormat.inject( tracer.getCurrentSpan().getContext(), b, SETTER);
       }
-
   }
 }
