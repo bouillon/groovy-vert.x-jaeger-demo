@@ -8,20 +8,20 @@ It works also with Zipkin (tested)
 
 Flow
 
-   1. gv1 generate periodicaly a message and send them to the event bus
-   2. gv2 recieve the messages and do some job
-   3. publish the result to the event bus back
-   4. g1 recieve the message and deliver(print out and log) it to customer. After that finish the span scope
+1. gv1 generate periodicaly a message and send them to the event bus
+2. gv2 recieve the messages and do some job
+3. publish the result to the event bus back
+4. g1 recieve the message and deliver(print out and log) it to customer. After that finish the span scope
 
 
 Software requirements:
 
-    java version "1.8.0_161"
-    Groovy Version: 2.4.15 JVM
-    Jaeger tracing or Zipkin
+* java version "1.8.0_161"
+* Groovy Version: 2.4.15 JVM
+* Jaeger tracing or Zipkin
         
-        https://www.jaegertracing.io/docs/getting-started/
-        https://github.com/openzipkin/docker-zipkin/blob/master/README.md
+    * https://www.jaegertracing.io/docs/getting-started/
+    * https://github.com/openzipkin/docker-zipkin/blob/master/README.md
         
 
 How to start
