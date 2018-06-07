@@ -23,7 +23,7 @@ repositories {
 def openCensusVersion = '0.13.2'
 mainClassName = 'io.vertx.core.Launcher'
 def vertxVersion = '3.4.1'
-def mainVerticleName = "groovy:vav.MyGroovyVerticle"
+def mainVerticleName = "groovy:demo.MyGroovyVerticle"
 def watchForChange = 'src/**/*'
 def doOnChange = './gradlew classes'
 
